@@ -1,0 +1,137 @@
+% !TeX spellcheck = en_GB
+
+\documentclass[11pt]{article}
+\usepackage{amsmath, alltt, amssymb, xspace, times, epsfig}
+\usepackage{amssymb}
+
+\setlength{\evensidemargin}{0in} \setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in} \setlength{\textheight}{8.5in}
+\setlength{\topmargin}{0in} \setlength{\headheight}{0in}
+
+\newcommand{\Zn}{\ensuremath{\mathbb{Z}_n}\xspace}
+\newcommand{\Zns}{\ensuremath{\mathbb{Z}_n^*}\xspace}
+\newcommand{\Zp}{\ensuremath{\mathbb{Z}_p}\xspace}
+\newcommand{\Zps}{\ensuremath{\mathbb{Z}_p^*}\xspace}
+\newcommand{\Zq}{\ensuremath{\mathbb{Z}_q}\xspace}
+
+\newcommand{\smod}{\ensuremath{\mathrm{mod}\;}}
+
+\newcommand{\DD}{\ensuremath{\mathcal{D}}\xspace}
+
+\newcommand{\Gen}{\ensuremath{\mathsf{Gen}}\xspace}
+\newcommand{\Enc}{\ensuremath{\mathsf{Enc}}\xspace}
+\newcommand{\Dec}{\ensuremath{\mathsf{Dec}}\xspace}
+
+\renewcommand{\Pr}{\ensuremath{\mathbf{Pr}}\xspace}
+
+\newcommand{\PT}{\ensuremath{\mathsf{PT}}\xspace}
+\newcommand{\CT}{\ensuremath{\mathsf{CT}}\xspace}
+\newcommand{\Key}{\ensuremath{\mathsf{Key}}\xspace}
+\newcommand{\PrivK}{\ensuremath{\mathsf{PrivK}}\xspace}
+\newcommand{\eav}{\ensuremath{\mathsf{eav}}\xspace}
+\newcommand{\mult}{\ensuremath{\mathsf{mult}}\xspace}
+
+\newcommand{\CC}{\ensuremath{\mathcal{C}}\xspace}
+\newcommand{\KK}{\ensuremath{\mathcal{K}}\xspace}
+\newcommand{\MM}{\ensuremath{\mathcal{M}}\xspace}
+\newcommand{\AAA}{\ensuremath{\mathcal{A}}\xspace}
+
+\newcommand{\sur}[1]{\ensuremath{^{\textrm{#1}}}}
+\newcommand{\sous}[1]{\ensuremath{_{\textrm{#1}}}}
+
+\newcommand{\ee}[1]{\ensuremath{#1}}
+
+\newcommand{\note}[1]{\textbf{Note for TA:} #1}\xspace
+
+\begin{document}
+%\author{Yiwei Xia}
+%\date{}
+%\maketitle
+
+\thispagestyle{empty}
+
+\noindent \textbf{COMP 547}
+\begin{center}
+{\LARGE notes}
+\end{center}
+
+\begin{description}
+
+ \item[Block Ciphers] A block cipher is just a keyed function \textit{F} : \ee{\{0,1\}^\textit{l} \times \{0,1\}^\textit{l} \rightarrow \{0,1\}^\textit{l}}  that is a permutation (bijection) of the original block
+ 
+ \item[SPN] \hfill
+ \begin{itemize}
+ 	\item confusion diffusion paradigm - get big random blocks by putting small random blocks together.
+ 	\begin{itemize}
+ 		\item let block size be 64
+ 		\item let the key specify 8 permutations(bijections) \ee{F = (f_1, f_2,...f_8)}, each with 8 bit block length
+ 		\item break the block \ee{X} into bytes \ee{(x_1, x_2,...x_8)}
+ 		\item \ee{F_k(x) = f_1(x_1)\|...\|f_{16}(x_{16})}
+ 		\item \ee{F} introduces \textit{confusion}
+ 		\item now apply a mixing permutation function to introduce \textit{diffusion}. If you don't, the for two different inputs that differ by one bit, the outputs will only differ in that one byte. 
+ 	\end{itemize}
+ 	\item S-box
+ 	\begin{itemize}
+ 		\item for SPN, instead of having some arbitrary function, instead have \ee{f} be a \textbf{PUBLIC} "substitution function" (permutation) \ee{S} called an S-box, and then let \ee{k} define the function \ee{f(x) = S(k \oplus x)}
+ 		\item evaluating proceeds in rounds. For each round
+ 		\begin{itemize}
+ 			\item Key mixing: \ee{x:=x \oplus k}, where \ee{k} is the current round sub-key
+ 			\item Substutiton: \ee{x:=S_1(x_1)\|...\|S_n(x_n)}, where \ee{x_i} is the \ee{i}th byte of \ee{x}
+ 			\item Permutation: apply a mixing permutation function to obtain output
+ 		\end{itemize}
+ 		after all rounds are complete, apply one more key mix, then output cipher block
+ 		\item SPNs are all invertible
+ 	\end{itemize}
+ \end{itemize}
+
+ \item[Feistel Network] \hfill
+ \begin{itemize}
+ 	\item allows constructing ciphers(functions) from non-invertible components.
+ 	\item S-boxes need to be invertible, which is quite restrictive for functions.
+ 	\item for an input \ee{(L, R)}:
+ 	\subitem forward proceeds as:
+ 	\begin{itemize}
+ 		\item \ee{L_{i+1} = R_i}
+ 		\item \ee{R_{i+1} = L_i \oplus F(R_i, K_i)} 		
+ 	\end{itemize}
+ 	\subitem backwards:
+ 	\begin{itemize}
+ 		\item \ee{R_i = L_{i+1}}
+ 		\item \ee{L_i = R_{i+1} \oplus F(L_{i+1}, K_i)}
+ 	\end{itemize}
+ 	
+ \end{itemize}
+
+\newpage
+ 
+ \item[DES] \hfill
+ \begin{itemize}
+ 	\item DES is a 16 round feistel network
+ 	\item DES takes 64 bit block + 56 bit master key
+ 	\item the key schedule takes 16 48 bit subsets of the master key, \ee{k_1, k_2,...k_{16}}
+ 	\item DES round function is just a SPN. it takes 32 bit input (half block) \ee{R} + 48 bit key \ee{k_i}. \begin{enumerate}
+ 		\item \ee{R} is expanded to 48 bits by duplicating half the bits, denoted by \ee{R' = E(R)} where \ee{E} is our expansion function.
+ 		
+ 		\item \ee{R'} is then XORed with \ee{k_i} (also 48 bits long) and the result is divided into 8 6 bit blocks.
+ 		\begin{itemize}
+ 			\item DES S-box is just a 4x16 matrix, with each cell containing a 4 bit output, the first and last bits in the input map to row, the middle 4 map to column. 
+ 			\item S-box is a 4-1 function, with each input existing once in each row
+ 			\item One bit change to the input of S-box changes at least two bits in the output
+ 		\end{itemize}
+ 	
+ 		\item concatenate the output of the S-boxes
+ 		\item apply a mixing permutation to obtain the output
+ 		
+ 	\end{enumerate}
+ 	\item DES has avalanche effect
+ 	\begin{itemize}
+ 		\item suppose some input \ee{(L', R)}, and another input \ee{(L, R)}, in which \ee{L} differs from \ee{L'} by one bit. After one round, they still differ in one bit. After the output of the second S-box
+ 	\end{itemize}
+
+ \end{itemize}
+  
+
+\end{description}
+
+\end{document}
+ 
