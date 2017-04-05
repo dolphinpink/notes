@@ -727,9 +727,16 @@
 	\item one node for each variable in problem
 	\item arcs(=arrows) are direct influences
 	\begin{itemize}
-		\item 
+		\item \ee{X \rightarrow Y} - X is a parent of Y, X has a direct influence on Y
 	\end{itemize}
 \end{itemize}
+
+\item types of queries for graphs
+\begin{description}
+	\item unconditional probability query - \ee{P(Y)}
+	\item conditional probability query - \ee{P(Y|Z = z)}
+	\item maximum a posterier(=MAP) query - given evident \ee{Z = z}, what is the most likely assignment of values to variables Y? \\ \ee{MAP(Y|Z = z) = argmax_yP(Y=y|Z=z)}
+\end{description}
 
 \end{description}
 
