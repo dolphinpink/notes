@@ -738,6 +738,58 @@
 	\item maximum a posterier(=MAP) query - given evident \ee{Z = z}, what is the most likely assignment of values to variables Y? \\ \ee{MAP(Y|Z = z) = argmax_yP(Y=y|Z=z)}
 \end{description}
 
+\item speeding up
+\begin{itemize}
+	\item variable elimination algorithm
+	\begin{itemize}
+		\item sum up probabilities faster
+		\item basic idea
+		\begin{enumerate}
+			\item impose ordering over variables, query variable last
+			\item maintain list of "factors", pretty much products of variables, sum over them, memorize intermediate computations
+			\item dp
+		\end{enumerate}
+
+		\item notation
+		\begin{itemize}
+			\item let \ee{X_i} be an evidence variable, with observed value \ee{x_i}
+			\item \ee{\delta(x_i,x_j) = 1 \iff x_i \ x_j}
+			\item therefore \ee{P(s \vert F=1) = \sum_{f}^{}P(s \vert f) \delta (f,1)}
+		\end{itemize}
+	
+		\item algorithm 
+		\begin{enumerate}
+			\item pick \textbf{variable ordering }, with \ee{Y}(=query) at end
+			\item initialize the active factor list using the conditional probability distributions in the bayes net
+			\item add evidence potentials(=\ee{\delta (e_i,e_j)})for all evidence variables to active factor list
+			\item for all the variables
+			\begin{enumerate}
+				\item take next variable \ee{X_i}
+				\item take all factors that have \ee{X_i} as an argument off the active factor list, multiply them, sum them over all values \ee{X_i}, creating new factor \ee{m_{xi}}
+				\item put \ee{m_{xi}} in active factor list
+			\end{enumerate}
+		
+			\includegraphics[width=90mm,scale=1]{variable_elim}
+			
+			\item independencies
+			\begin{itemize}
+				\item if we know that items are independent of eachother, then remove them from the variable list immediately
+				
+			\end{itemize}
+	
+		\end{enumerate}
+	\end{itemize}
+
+	\item Bayes ball
+	\begin{itemize}
+		\item figure out which variables are conditionally independent given other variables
+	\end{itemize}
+
+	\item 
+\end{itemize}
+
+
+
 \end{description}
 
 \end{document}
