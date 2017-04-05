@@ -281,7 +281,7 @@
 	\begin{itemize}
 		\item or - agent chooses between actions
 		\item and - non-deterministic action results induced by environment
-		\\ \includegraphics{and_or}
+		\\ \includegraphics[width=100mm,scale=1]{and_or}
 		\item solution is a subtree with
 		\begin{itemize}
 			\item one action at \textbf{OR} node
@@ -519,12 +519,206 @@
 			\end{itemize}
 	
 		\end{enumerate}
+	\end{itemize}
+\end{itemize}
 
+\item 10 - Planning
+\begin{itemize}
+	\item plan - collection of actions to perform a task
+	\item STRIPS
+	\begin{itemize}
+		\item domain - set of typed objects represented by propositions
 		
-		
+		\item states - represented as first order predicates over objects
+		\begin{itemize}
+			\item e.g. \ee{In(robot, room) \wedge Closed(door) \wedge ...}
+			\item closed world assumption
+			\subitem everything not stated is false
+			\subitem only objects in the world are the ones that are defined
+			\item goals are states
+		\end{itemize}
 	
+		\item operators - defined in terms of
+		\begin{itemize}
+			\item preconditions - when can the action be applied - conj. of literals
+			\item effects - what happens after the action?
+			\item predicates as well
+		\end{itemize}
+	
+		\item action schema
+		\begin{itemize}
+			\item way to define operator as an ordered triplet
+			\item \ee{\{Name,Preconditions,Effects\}}
+			\item effects and postconditions are expressed as
+			\begin{itemize}
+				\item add-list - list of propositions that become true after action
+				\item delete-list - list of propositions that become false after action
+				\item e.g. \ee{At(robot,y) \wedge \lnot At(robot,x)}
+			\end{itemize}
+		\end{itemize}
+	
+		\item semantics
+		\begin{itemize}
+			\item if precondition is false in world state, then action does not change anything
+			\begin{itemize}
+				\item action does not get applied at all
+			\end{itemize}
+			\item if precondition is true, \textbf{IN THIS ORDER}, delete items in delete-list, add items in add-list
+		\end{itemize}
+	
+		\item pros
+		\begin{itemize}
+			\item restricted, low branching, efficient inference
+			\item all operations are adding or deleting from KB
+		\end{itemize}
+	
+		\item cons
+		\begin{itemize}
+			\item limited, assumes small number props per action
+		\end{itemize}
+	
+		\item approaches to planning
+		\begin{itemize}
+			\item states-space planning - uses states and operators
+			\begin{itemize}
+				\item finding plan is constructive search through state space for goal states
+			\end{itemize}
+			
+			\item plan-space planning - partial order planning - R\&N 10.4.4
+		\end{itemize}
+	
+		\item state-space planning
+		\begin{itemize}
+			\item forward planning
+			\begin{enumerate}
+				\item basic idea - reason from start state, try to find operators that can be applied
+				\item determine all operators that work on start state
+				\item ground operators - replace variables with any combinations of constants
+				\item choose a grounded operator to apply
+				\item determine new content of KB, based on operator
+			\end{enumerate}
+			
+			\item regression planning
+			\begin{enumerate}
+				\item basic idea - reason from goal state, find the actions that will lead to goal
+				\item pick some actions \ee{A} that satisfy some of the goals
+				\item make a new goal, adding preconditions of \ee{A} to set of propositions
+				\item repeat until goal set is satisfied by start state
+			\end{enumerate}
+		\end{itemize}
+	
+		\item STRIPS attributes
+		\begin{itemize}
+			\item sound - only legal plans will be found
+			\item - not complete - once subgoal ordering is selected, no backtracking
+			\item suboptimal - no guarantee of finding shortest plan
+			\item expensive - usually NP-hard or worse
+		\end{itemize}
+	
+		\item other solutions
+		\begin{itemize}
+			\item SATPlan - satisfiablity problem
+			\item Heuristic search
+			\item GraphPlan
+			\item Fast forward planning - use hill climbing approximate, then best-first
+			\item Hierarchal task network - decompose complex planning into hierarchy of smaller planning problems
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+
+\item 11 - uncertainty
+\begin{itemize}
+	
+	\item problems with planning
+	\begin{itemize}
+		\item incomplete information
+		\begin{itemize}
+			\item unknown predications (states)
+			\item disjunctive effects i.e. either A or B happens when operator happens
+		\end{itemize}
+	
+		\item incorrect information
+		\begin{itemize}
+			\item current state incorrect
+			\item unanticipated outcomes (missing/incorrect postconditions for operators), makes whole plan incorrect
+		\end{itemize}
+	
+		\item qualification problem
+		\begin{itemize}
+			\item all required preconditions + possible condition outcomes combinatorially huge
+		\end{itemize}
+	\end{itemize}
+
+	\item solutions
+	\begin{itemize}
+		\item conditional (contingency) planning
+		\begin{itemize}
+			\item include observation actions, chick if things are okay, contingency plans if not okay
+			\item expensive, because gotta cover all the things that can go wrong
+		\end{itemize}
+	
+		\item monitoring/replanning
+		\begin{itemize}
+			\item assume normal states/outcomes
+			\item check progress during execution, try again if failed
+		\end{itemize}
+	
+		\item solutions are either implicit or explicit
+		\begin{itemize}
+			\item implicit
+			\begin{itemize}
+				\item avoid it, make plan that is robust to it, uncertainty doesn't make problems
+			\end{itemize}
+		
+			\item explicit
+			\begin{itemize}
+				\item build a model to describes it, and deal with it
+				\item describing using logic is not robust - risks falsehoods, and leads to weak conclusions
+				\item use Bayesian probability!
+
+			\end{itemize}
+		\end{itemize}
+	
+		\item Bayesian probability
+		\begin{itemize}
+			\item best waifu for dealing with uncertainty
+			\item clear semantically + intuitive, can be learned from data
+			\item definitions
+			\begin{itemize}
+				\item belief - a belief relates a logical proposition to current state of knowledge/current state of world
+				\item beliefs are subjective, based on one's state of knowledge, and different agents may hold different beliefs
+			\end{itemize}
+		
+			\item new evidence changes probabilities of propositions
+			
+			\item prior (unconditional) beliefs denote belief before the arrival of any evidence
+			
+		\end{itemize}
+	
+		\item decision theory = utility theory + probability theory
+
+		\item probability theory
+		\begin{itemize}
+			\item pretty much just normal probability things
+			\item define the world as set of random variables
+			\item world is divided into a set of elementary, mutually exclusive events(=states)
+			\item probabilistic model - allows us to compute probabilities of any event in world
+			\item joint probability distribution - assigns weights to each event
+			\item unconditional probability = sum of all entries from joint distribution
+		\end{itemize}
+	
+		\item Bayes Rule - \ee{P(H \mid e) = P(e \mid H) P(H)/P(e)}
+		\begin{itemize}
+			\item \ee{P(H\mid e)} - posterior probability
+			\item \ee{P(H)} - prior probability
+			\item \ee{P(e\mid H) }- likelihood
+			\item \ee{P(e)} - normalizing constant
+			\subitem \ee{P(e) = P(e \mid H) P(H) + P(e \mid ~H) P(~H)}
+		\end{itemize}
 		
 	\end{itemize}
+
 \end{itemize}
 
 \end{description}
