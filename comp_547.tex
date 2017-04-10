@@ -156,7 +156,17 @@
 	\end{itemize}
 
 	\item constructing Mac
-	\begin 
+	\begin{itemize}
+		\item input \ee{k \in {0,1}^n}, and message \ee{m \in {0,1}^n}, output tag \ee{t:=F_k(m)}
+		\item \ee{\mathit{Vrfy}} outputs 1 if \ee{t = F_k(m)}
+		\item when authenticating with blocks, be wary of 
+		\begin{itemize}
+			\item re-ordering attack - switching the order of blocks and tags likewise
+			\item truncation attack - adding a block index to each block and tagging \ee{i\|m_i}
+			\item mix and match attack - adding length \ee{l} prevents truncation doesn't block mixing and matching messages
+			\item computing an extra message id with the block \ee{t_i=\mathit{Mac}/_k(l \| i \| m_i)}
+		\end{itemize}
+	\end{itemize}
 \end{itemize}
   
 
