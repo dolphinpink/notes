@@ -104,8 +104,8 @@
 
 \newpage
  
- \item[DES] \hfill
- \begin{itemize}
+\item[DES] \hfill
+\begin{itemize}
  	\item DES is a 16 round feistel network
  	\item DES takes 64 bit block + 56 bit master key
  	\item the key schedule takes 16 48 bit subsets of the master key, \ee{k_1, k_2,...k_{16}}
@@ -126,9 +126,38 @@
  	\item DES has avalanche effect
  	\begin{itemize}
  		\item suppose some input \ee{(L', R)}, and another input \ee{(L, R)}, in which \ee{L} differs from \ee{L'} by one bit. After one round, they still differ in one bit. After the output of the second S-box
- 	\end{itemize}
+	\end{itemize}
 
- \end{itemize}
+\end{itemize}
+
+\item[Message authentication codes] \hfill
+\begin{itemize}
+	\item when sending message, compute a MAC tag, based on message + key
+	\item \ee{{\mathit{Vrfy}}_k(m, \mathit{Mac}_k(M))=1}
+	\item can be deterministic or random
+	\begin{itemize}
+		\item if deterministic, \ee{\mathit{Vrfy}} is just recomputing the tag
+	\end{itemize}
+	\item breaking MAC - Mac-forge
+	\begin{itemize}
+		\item if give an oracle for the \ee{\mathit{Mac}}, the adversary can output a message along with a tag, for one he hasn't seen before
+	\end{itemize}
+	\item existential unforgeability - unable to forge a valid tag on \textit{any} message
+	\item protect against replay attacks with
+	\begin{itemize}
+		\item sequence numbers (=counters)
+		\item timestamps
+	\end{itemize}
+
+	\item Strong Mac
+	\begin{itemize}
+		\item general Mac security means that given messages and tags, new tags for new messages cannot be computed, however, does not take into account the possibility of generating new tags for the messages already received
+		\item net experiment called Mac-sforge
+	\end{itemize}
+
+	\item constructing Mac
+	\begin 
+\end{itemize}
   
 
 \end{description}
